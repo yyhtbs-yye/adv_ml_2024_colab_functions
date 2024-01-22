@@ -39,19 +39,33 @@ def plot(x, y, color='blue', dash='solid', legend='', title='Untitled', xaxis_ti
     if show: fig.show()
     return pfig
 
-def scatter(x, y, color='blue', marker_symbol='circle', legend='', title='Untitled', xaxis_title='x', yaxis_title='y', show=True):
+def scatter(x, y, color='blue', marker_symbol='circle', legend='', title='Untitled', xaxis_title='x', yaxis_title='y', show=True, classes=None):
     # Create a Plotly figure
     fig = go.Figure()
     pfig = PlotlyFigure(fig)
 
     # Add the scatter plot
-    fig.add_trace(go.Scatter(
-        x=x,
-        y=y,
-        mode='markers',  # Set mode to markers for scatter plot
-        name=legend,
-        marker=dict(color=color, symbol=marker_symbol)  # Set marker properties
-    ))
+    if classes is not None and len(classes) == len(x):
+        # If classes are provided and match the length of x and y, plot each class with a different color
+        for cls in set(classes):
+            idx = [i for i, c in enumerate(classes) if c == cls]
+            fig.add_trace(go.Scatter(
+                x=[x[i] for i in idx],
+                y=[y[i] for i in idx],
+                mode='markers',
+                name=f'{legend} {cls}',
+                marker=dict(symbol=marker_symbol)
+            ))
+    else:
+        # If classes are not provided or don't match in length, plot all points with the default color
+        fig.add_trace(go.Scatter(
+            x=x,
+            y=y,
+            mode='markers',
+            name=legend,
+            marker=dict(color=color, symbol=marker_symbol)
+        ))
+
 
     # Update layout
     fig.update_layout(
