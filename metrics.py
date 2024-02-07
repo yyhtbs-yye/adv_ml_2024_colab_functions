@@ -1,4 +1,4 @@
-def get_accuracy(labels, predicted):
+def calculate_accuracy(labels, predicted):
 
     # Calculate the total number of predictions
     total = labels.size(0)
