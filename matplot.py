@@ -119,26 +119,3 @@ def plot_heatmaps(weight_images, grid_size=None, title="Heatmaps", fig_size=(15,
     if show: fig.show()
     pfig = PlotlyFigure(fig)
     return pfig
-
-def make_grid_imshow(inps, titles=None, nrow = 8):
-    n_images = inps.shape[0]
-    ncol = int(np.ceil(n_images / nrow))
-    
-    fig = make_subplots(rows=ncol, cols=nrow, subplot_titles=titles)
-
-    img_idx = 0
-    for r in range(1, ncol + 1):
-        for c in range(1, nrow + 1):
-            if img_idx < n_images:
-                # Assuming inps[img_idx] is in the correct format for Plotly
-                fig.add_trace(go.Image(z=inps[img_idx]), row=r, col=c)
-            img_idx += 1
-    
-    # Update layout to hide axis ticks and labels
-    fig.update_xaxes(showticklabels=False)
-    fig.update_yaxes(showticklabels=False)
-    
-    # Adjust margins to fit titles and ensure layout is tight
-    fig.update_layout(margin=dict(l=10, r=10, t=30, b=10), showlegend=False)
-    
-    fig.show()
