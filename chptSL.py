@@ -6,7 +6,7 @@ def load_latest_checkpoint(model, checkpoint_dir, prefix):
     checkpoint_files = os.listdir(checkpoint_dir)
 
     # Regular expression to find files that match the naming pattern
-    pattern = re.compile(rf'{prefix}(\d+)\.chpt')
+    pattern = re.compile(rf'{prefix}(\d+)\.pth')
 
     # Find the file with the largest epoch number
     latest_checkpoint_file = None
@@ -44,7 +44,7 @@ def save_checkpoint(model, optimizer, epoch, checkpoint_dir, prefix):
     os.makedirs(checkpoint_dir, exist_ok=True)
 
     # Define the checkpoint filename
-    filename = f"{prefix}{epoch}.chpt"
+    filename = f"{prefix}{epoch}.pth"
     checkpoint_path = os.path.join(checkpoint_dir, filename)
 
     # Save the checkpoint
