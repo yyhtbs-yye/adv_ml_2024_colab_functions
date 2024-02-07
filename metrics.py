@@ -7,7 +7,7 @@ def calculate_accuracy(labels, predicted):
     correct = (predicted == labels).sum().item()
 
     # Calculate the accuracy
-    accuracy = 100 * correct / total
+    accuracy = correct / total
 
     return accuracy
 
