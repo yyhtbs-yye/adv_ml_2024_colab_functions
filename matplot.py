@@ -119,3 +119,36 @@ def plot_heatmaps(weight_images, grid_size=None, title="Heatmaps", fig_size=(15,
     if show: fig.show()
     pfig = PlotlyFigure(fig)
     return pfig
+
+def make_grid_imshow(inps, titles=None, nrow = 8):
+    """Imshow for Tensor with subtitles for each image."""
+    inps = inps.transpose((0, 2, 3, 1))
+    mean = np.array([0.485, 0.456, 0.406])
+    std = np.array([0.229, 0.224, 0.225])
+    inps = std * inps + mean
+    inps = np.clip(inps, 0, 1)
+    if titles is not None:
+        if len(titles) != inps.shape[0]:
+            raise ValueError("Titles length must match the number of images")
+
+    # Determine the grid size from the inpsut tensor
+    n_images = inps.shape[0]
+
+    ncol = int(np.ceil(n_images / nrow))
+
+    fig, axes = plt.subplots(ncol, nrow, figsize=(16, 2*ncol))
+    axes = axes.flatten()
+
+    for i, ax in enumerate(axes):
+        if i < n_images:
+            img = inps[i]
+            ax.imshow(img)
+            ax.set_xticks([])
+            ax.set_yticks([])
+            if titles is not None:
+                ax.set_title(titles[i], fontsize=9)
+        else:
+            ax.axis('off')
+
+    plt.tight_layout()
+    plt.show()
