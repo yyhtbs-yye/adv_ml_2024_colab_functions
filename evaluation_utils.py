@@ -18,3 +18,16 @@ def get_labels_and_predictions(model, dataloader, to_cpu=True):
                 y_hat = y_hat.cpu()
 
     return y, y_hat
+
+def unnormalize(images, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):
+    # The mean and std have to be reshaped to [C, 1, 1] to match the tensor dimensions.
+    mean = torch.tensor(mean).view(-1, 1, 1)
+    std = torch.tensor(std).view(-1, 1, 1)
+    
+    # Perform the unnormalization
+    if images.is_cuda:
+        mean = mean.cuda()
+        std = std.cuda()
+        
+    images.mul_(std).add_(mean)  # This modifies the tensor in-place
+    return images
