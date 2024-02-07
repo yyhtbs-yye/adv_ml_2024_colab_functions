@@ -121,34 +121,24 @@ def plot_heatmaps(weight_images, grid_size=None, title="Heatmaps", fig_size=(15,
     return pfig
 
 def make_grid_imshow(inps, titles=None, nrow = 8):
-    """Imshow for Tensor with subtitles for each image."""
-    inps = inps.transpose((0, 2, 3, 1))
-    mean = np.array([0.485, 0.456, 0.406])
-    std = np.array([0.229, 0.224, 0.225])
-    inps = std * inps + mean
-    inps = np.clip(inps, 0, 1)
-    if titles is not None:
-        if len(titles) != inps.shape[0]:
-            raise ValueError("Titles length must match the number of images")
-
-    # Determine the grid size from the inpsut tensor
     n_images = inps.shape[0]
-
     ncol = int(np.ceil(n_images / nrow))
+    
+    fig = make_subplots(rows=ncol, cols=nrow, subplot_titles=titles)
 
-    fig, axes = plt.subplots(ncol, nrow, figsize=(16, 2*ncol))
-    axes = axes.flatten()
-
-    for i, ax in enumerate(axes):
-        if i < n_images:
-            img = inps[i]
-            ax.imshow(img)
-            ax.set_xticks([])
-            ax.set_yticks([])
-            if titles is not None:
-                ax.set_title(titles[i], fontsize=9)
-        else:
-            ax.axis('off')
-
-    plt.tight_layout()
-    plt.show()
+    img_idx = 0
+    for r in range(1, ncol + 1):
+        for c in range(1, nrow + 1):
+            if img_idx < n_images:
+                # Assuming inps[img_idx] is in the correct format for Plotly
+                fig.add_trace(go.Image(z=inps[img_idx]), row=r, col=c)
+            img_idx += 1
+    
+    # Update layout to hide axis ticks and labels
+    fig.update_xaxes(showticklabels=False)
+    fig.update_yaxes(showticklabels=False)
+    
+    # Adjust margins to fit titles and ensure layout is tight
+    fig.update_layout(margin=dict(l=10, r=10, t=30, b=10), showlegend=False)
+    
+    fig.show()
