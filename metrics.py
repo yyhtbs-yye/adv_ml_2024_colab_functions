@@ -1,4 +1,4 @@
-def calculate_accuracy(labels, predicted):
+def get_accuracy(labels, predicted):
 
     # Calculate the total number of predictions
     total = labels.size(0)
@@ -11,9 +11,8 @@ def calculate_accuracy(labels, predicted):
 
     return accuracy
 
-def calculate_metrics(labels, predicted):
-    
-    # Ensure binary output by checking the maximum and minimum values
+def calculate_confusion_matrix(labels, predicted):
+    # Ensure binary output
     assert labels.max() <= 1 and labels.min() >= 0, "Labels must be binary."
     assert predicted.max() <= 1 and predicted.min() >= 0, "Predictions must be binary."
     
@@ -23,11 +22,26 @@ def calculate_metrics(labels, predicted):
     FP = ((predicted == 1) & (labels == 0)).sum().item()
     FN = ((predicted == 0) & (labels == 1)).sum().item()
     
-    # Calculate metrics
-    sensitivity = TP / (TP + FN) if (TP + FN) != 0 else 0
-    specificity = TN / (TN + FP) if (TN + FP) != 0 else 0
+    return TP, TN, FP, FN
+
+def calculate_precision(labels, predicted):
+    TP, TN, FP, FN = calculate_confusion_matrix(labels, predicted)
     precision = TP / (TP + FP) if (TP + FP) != 0 else 0
-    recall = sensitivity  # Recall is the same as sensitivity
-    f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) != 0 else 0
-    
-    return sensitivity, specificity, precision, f1_score
+    return precision
+
+def calculate_specificity(labels, predicted):
+    TP, TN, FP, FN = calculate_confusion_matrix(labels, predicted)
+    specificity = TN / (TN + FP) if (TN + FP) != 0 else 0
+    return specificity
+
+def calculate_sensitivity(labels, predicted):
+    TP, TN, FP, FN = calculate_confusion_matrix(labels, predicted)
+    sensitivity = TP / (TP + FN) if (TP + FN) != 0 else 0
+    return sensitivity
+
+def calculate_f1_score():
+    precision, sensitivity = calculate_precision(labels, predicted), calculate_sensitivity(labels, predicted)
+    f1_score = 2 * (precision * sensitivity) / (precision + sensitivity) if (precision + sensitivity) != 0 else 0
+    return f1_score
+
+
