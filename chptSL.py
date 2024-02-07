@@ -54,3 +54,9 @@ def save_checkpoint(model, optimizer, epoch, checkpoint_dir, prefix):
     }, checkpoint_path)
 
     print(f"Checkpoint saved to {checkpoint_path}")
+
+def mkdir(path):
+    isExist = os.path.exists(path)
+    if not isExist:# Check whether the specified path exists or not
+        os.makedirs(path)
+        print(f"The new directory {path} is created!")
