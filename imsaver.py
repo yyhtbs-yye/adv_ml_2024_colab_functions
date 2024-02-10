@@ -4,7 +4,6 @@ import numpy as np
 
 def save_grid_images(images, labels, predicted, name_dict, nrow=8, show_only_incorrect=False):
     if show_only_incorrect:
-        # Filter to include only incorrect predictions
         incorrect_indices = [i for i, (l, p) in enumerate(zip(labels, predicted)) if l != p]
         images = images[incorrect_indices]
         labels = [labels[i] for i in incorrect_indices]
@@ -27,8 +26,25 @@ def save_grid_images(images, labels, predicted, name_dict, nrow=8, show_only_inc
     fig.update_xaxes(showticklabels=False)
     fig.update_yaxes(showticklabels=False)
     
+    # Base size for each subplot (image)
+    base_width_per_image = 200  # pixels
+    base_height_per_image = 200  # pixels
+
+    # Calculate total figure width and height
+    total_width = base_width_per_image * nrow
+    total_height = base_height_per_image * ncol
+    
+    # Adjust for margins and spacing if necessary
+    adjusted_width = total_width + 100  # Adjust based on actual needs
+    adjusted_height = total_height + 100  # Adjust based on actual needs
+    
     # Adjust margins to fit titles and ensure layout is tight
-    fig.update_layout(margin=dict(l=10, r=10, t=30, b=10), showlegend=False)
+    fig.update_layout(
+        margin=dict(l=10, r=10, t=30, b=10),
+        showlegend=False,
+        width=adjusted_width,
+        height=adjusted_height
+    )
     
     # Save figure to a PNG file
     fig.write_image("grid_figure.png")
