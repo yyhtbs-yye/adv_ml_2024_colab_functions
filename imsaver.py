@@ -27,8 +27,8 @@ def save_grid_images(images, labels, predicted, name_dict, nrow=8, show_only_inc
     fig.update_yaxes(showticklabels=False)
     
     # Base size for each subplot (image)
-    base_width_per_image = 200  # pixels
-    base_height_per_image = 200  # pixels
+    base_width_per_image = 64  # pixels
+    base_height_per_image = 64  # pixels
 
     # Calculate total figure width and height
     total_width = base_width_per_image * nrow
