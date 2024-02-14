@@ -39,7 +39,7 @@ def load_latest_checkpoint(model, checkpoint_dir, prefix):
         print("No checkpoint file found. Model weights not modified.")
         return model, -1
 
-def save_checkpoint(model, optimizer, epoch, checkpoint_dir, prefix):
+def save_checkpoint(model, epoch, checkpoint_dir, prefix):
     # Ensure the checkpoint directory exists
     os.makedirs(checkpoint_dir, exist_ok=True)
 
