@@ -70,3 +70,13 @@ def train_svms_for_rcnn(samples, n_classes, hard_negative_sampler, C=1.0, n_hard
         svms[class_idx].fit(X_train, y_train)
 
     return svms
+
+import torch
+
+def extract_features(x, model):
+    # Ensure the model is in evaluation mode and gradient computation is off
+    model.eval()
+    with torch.no_grad():
+        # Directly pass the input through the model
+        features = model(x)
+    return features
