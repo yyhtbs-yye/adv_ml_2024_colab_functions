@@ -1,3 +1,7 @@
+import torch
+from torchvision import transforms
+import numpy as np
+
 def generate_samples(anchor_tlbr_boxes, label_tlbr_boxes, label_classes, iou_fcn, pos_iou_threshold=0.5, neg_iou_threshold=0.3):
     positive_samples = []
     negative_samples = []
@@ -71,12 +75,31 @@ def train_svms_for_rcnn(samples, n_classes, hard_negative_sampler, C=1.0, n_hard
 
     return svms
 
-import torch
-
-def extract_features(x, model):
+def extract_features(images, model):
+    # Define the preprocessing steps
+    preprocess = transforms.Compose([
+        transforms.ToPILImage(),
+        transforms.Resize((224, 224)),  # Resize if necessary
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ])
+    
+    # Process each image in the list
+    tensors = []
+    for img in images:
+        tensor = preprocess(img)  # Apply the preprocessing to each image
+        tensors.append(tensor)
+    
+    # Stack all processed tensors to create a batch
+    batch_tensor = torch.stack(tensors)
+    
     # Ensure the model is in evaluation mode and gradient computation is off
     model.eval()
     with torch.no_grad():
-        # Directly pass the input through the model
-        features = model(x)
-    return features
+        # Pass the input through the model, the output should be flattened to a vector if model output are feature maps
+        outputs = model(batch_tensor).flatten(start_dim=1)
+    
+    # Convert the output tensor to a NumPy array
+    output_np = output.cpu().numpy()
+    
+    return output_np
