@@ -75,7 +75,7 @@ def train_svms_for_rcnn(samples, n_classes, hard_negative_sampler, C=1.0, n_hard
 
     return svms
 
-def extract_features(images, model):
+def get_neural_features(images, model):
     # Define the preprocessing steps
     preprocess = transforms.Compose([
         transforms.ToPILImage(),
